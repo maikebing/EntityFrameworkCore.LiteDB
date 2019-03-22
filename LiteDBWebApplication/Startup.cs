@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using LiteDBWebApplication.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using MaikeBing.EntityFrameworkCore;
 namespace LiteDBWebApplication
 {
     public class Startup

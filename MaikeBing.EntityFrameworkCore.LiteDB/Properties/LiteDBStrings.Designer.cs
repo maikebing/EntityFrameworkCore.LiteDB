@@ -7,25 +7,25 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.EntityFrameworkCore.InMemory.Internal
+namespace MaikeBing.EntityFrameworkCore.LiteDB.Internal
 {
     /// <summary>
     ///		This API supports the Entity Framework Core infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public static class InMemoryStrings
+    public static class LiteDBStrings
     {
         private static readonly ResourceManager _resourceManager
-            = new ResourceManager("Microsoft.EntityFrameworkCore.InMemory.Properties.InMemoryStrings", typeof(InMemoryStrings).GetTypeInfo().Assembly);
+            = new ResourceManager("MaikeBing.EntityFrameworkCore.LiteDB.Properties.LiteDBStrings", typeof(LiteDBStrings).GetTypeInfo().Assembly);
 
         /// <summary>
-        ///     Saved {count} entities to in-memory store.
+        ///     Saved {count} entities to LiteDB store.
         /// </summary>
         public static readonly EventDefinition<int> LogSavedChanges
             = new EventDefinition<int>(
                 LiteDBEventId.ChangesSaved,
                 LogLevel.Information,
-                "InMemoryEventId.ChangesSaved",
+                "LiteDBEventId.ChangesSaved",
                 LoggerMessage.Define<int>(
                     LogLevel.Information,
                     LiteDBEventId.ChangesSaved,
@@ -38,7 +38,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Internal
             = new EventDefinition(
                 LiteDBEventId.TransactionIgnoredWarning,
                 LogLevel.Warning,
-                "InMemoryEventId.TransactionIgnoredWarning",
+                "LiteDBEventId.TransactionIgnoredWarning",
                 LoggerMessage.Define(
                     LogLevel.Warning,
                     LiteDBEventId.TransactionIgnoredWarning,
@@ -78,3 +78,4 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Internal
         }
     }
 }
+

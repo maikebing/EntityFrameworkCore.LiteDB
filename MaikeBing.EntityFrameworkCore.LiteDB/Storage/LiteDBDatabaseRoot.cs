@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Microsoft.EntityFrameworkCore.Storage
+namespace MaikeBing.EntityFrameworkCore.Storage
 {
     /// <summary>
     ///     Acts as a root for all in-memory databases such that they will be available

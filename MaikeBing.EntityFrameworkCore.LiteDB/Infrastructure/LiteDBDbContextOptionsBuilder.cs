@@ -3,9 +3,10 @@
 
 using System.ComponentModel;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Utilities;
 
-namespace Microsoft.EntityFrameworkCore.Infrastructure
+namespace MaikeBing.EntityFrameworkCore.Infrastructure
 {
     /// <summary>
     ///     <para>

@@ -1,8 +1,8 @@
 {
-  "AssemblyIdentity": "Microsoft.EntityFrameworkCore.InMemory, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60",
+  "AssemblyIdentity": "MaikeBing.EntityFrameworkCore.LiteDB, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60",
   "Types": [
     {
-      "Name": "Microsoft.Extensions.DependencyInjection.InMemoryServiceCollectionExtensions",
+      "Name": "MaikeBing.Extensions.DependencyInjection.LiteDBServiceCollectionExtensions",
       "Visibility": "Public",
       "Kind": "Class",
       "Abstract": true,
@@ -12,7 +12,7 @@
       "Members": [
         {
           "Kind": "Method",
-          "Name": "AddEntityFrameworkInMemoryDatabase",
+          "Name": "AddEntityFrameworkLiteDBDatabase",
           "Parameters": [
             {
               "Name": "serviceCollection",
@@ -29,7 +29,7 @@
       "GenericParameters": []
     },
     {
-      "Name": "Microsoft.EntityFrameworkCore.InMemoryDatabaseFacadeExtensions",
+      "Name": "MaikeBing.EntityFrameworkCore.LiteDBDatabaseFacadeExtensions",
       "Visibility": "Public",
       "Kind": "Class",
       "Abstract": true,
@@ -39,7 +39,7 @@
       "Members": [
         {
           "Kind": "Method",
-          "Name": "IsInMemory",
+          "Name": "IsLiteDB",
           "Parameters": [
             {
               "Name": "database",
@@ -56,7 +56,7 @@
       "GenericParameters": []
     },
     {
-      "Name": "Microsoft.EntityFrameworkCore.InMemoryDbContextOptionsExtensions",
+      "Name": "MaikeBing.EntityFrameworkCore.LiteDBDbContextOptionsExtensions",
       "Visibility": "Public",
       "Kind": "Class",
       "Abstract": true,
@@ -77,8 +77,8 @@
               "Type": "System.String"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "LiteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -109,8 +109,8 @@
               "Type": "System.String"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "LiteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -134,11 +134,11 @@
             },
             {
               "Name": "databaseRoot",
-              "Type": "Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot"
+              "Type": "Microsoft.EntityFrameworkCore.Storage.LiteDBDatabaseRoot"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "LiteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -170,11 +170,11 @@
             },
             {
               "Name": "databaseRoot",
-              "Type": "Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot"
+              "Type": "Microsoft.EntityFrameworkCore.Storage.LiteDBDatabaseRoot"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "LiteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -193,8 +193,8 @@
               "Type": "Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<T0>"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "LiteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -221,8 +221,8 @@
               "Type": "Microsoft.EntityFrameworkCore.DbContextOptionsBuilder"
             },
             {
-              "Name": "inMemoryOptionsAction",
-              "Type": "System.Action<Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder>",
+              "Name": "liteDBOptionsAction",
+              "Type": "System.Action<MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder>",
               "DefaultValue": "null"
             }
           ],
@@ -236,7 +236,7 @@
       "GenericParameters": []
     },
     {
-      "Name": "Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot",
+      "Name": "MaikeBing.EntityFrameworkCore.Storage.LiteDBDatabaseRoot",
       "Visibility": "Public",
       "Kind": "Class",
       "Sealed": true,
@@ -261,7 +261,7 @@
       "GenericParameters": []
     },
     {
-      "Name": "Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder",
+      "Name": "MaikeBing.EntityFrameworkCore.Infrastructure.LiteDBDbContextOptionsBuilder",
       "Visibility": "Public",
       "Kind": "Class",
       "ImplementedInterfaces": [],
@@ -326,7 +326,7 @@
       "GenericParameters": []
     },
     {
-      "Name": "Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId",
+      "Name": "MaikeBing.EntityFrameworkCore.Diagnostics.LiteDBEventId",
       "Visibility": "Public",
       "Kind": "Class",
       "Abstract": true,

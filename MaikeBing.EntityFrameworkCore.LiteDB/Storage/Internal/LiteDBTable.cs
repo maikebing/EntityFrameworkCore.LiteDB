@@ -9,14 +9,15 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using Microsoft.EntityFrameworkCore.Utilities;
+using Microsoft.EntityFrameworkCore;
 
-namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
+namespace MaikeBing.EntityFrameworkCore.LiteDB.Storage.Internal
 {
     /// <summary>
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -88,7 +89,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
             }
             else
             {
-                throw new DbUpdateConcurrencyException(InMemoryStrings.UpdateConcurrencyException, new[] { entry });
+                throw new DbUpdateConcurrencyException(LiteDBStrings.UpdateConcurrencyException, new[] { entry });
             }
         }
 
@@ -147,7 +148,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
             }
             else
             {
-                throw new DbUpdateConcurrencyException(InMemoryStrings.UpdateConcurrencyException, new[] { entry });
+                throw new DbUpdateConcurrencyException(LiteDBStrings.UpdateConcurrencyException, new[] { entry });
             }
         }
 
@@ -173,7 +174,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
             if (_sensitiveLoggingEnabled)
             {
                 throw new DbUpdateConcurrencyException(
-                    InMemoryStrings.UpdateConcurrencyTokenExceptionSensitive(
+                    LiteDBStrings.UpdateConcurrencyTokenExceptionSensitive(
                         entry.EntityType.DisplayName(),
                         entry.BuildCurrentValuesString(entry.EntityType.FindPrimaryKey().Properties),
                         entry.BuildOriginalValuesString(concurrencyConflicts.Keys),
@@ -182,7 +183,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
             }
 
             throw new DbUpdateConcurrencyException(
-                InMemoryStrings.UpdateConcurrencyTokenException(
+                LiteDBStrings.UpdateConcurrencyTokenException(
                     entry.EntityType.DisplayName(),
                     Property.Format(concurrencyConflicts.Keys)),
                 new[] { entry });

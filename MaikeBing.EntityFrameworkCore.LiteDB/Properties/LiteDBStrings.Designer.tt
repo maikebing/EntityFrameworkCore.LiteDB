@@ -1,0 +1,4 @@
+<#
+    Session["ResourceFile"] = "LiteDBStrings.resx";
+#>
+<#@ include file="Resources.tt" #>

@@ -5,12 +5,15 @@ using System;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
+using Microsoft.EntityFrameworkCore;
+using MaikeBing.EntityFrameworkCore.Infrastructure;
+using MaikeBing.EntityFrameworkCore.Storage;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.EntityFrameworkCore
+namespace MaikeBing.EntityFrameworkCore
 {
     /// <summary>
     ///     In-memory specific extension methods for <see cref="DbContextOptionsBuilder" />.
@@ -144,7 +147,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="optionsBuilder"> The builder being used to configure the context. </param>
         /// <param name="inMemoryOptionsAction">An optional action to allow additional in-memory specific configuration.</param>
         /// <returns> The options builder so that further configuration can be chained. </returns>
-        [Obsolete("Use UseLiteDB(string, InMemoryDatabaseRoot) instead.")]
+        [Obsolete("Use UseLiteDB(string, LiteDBDatabaseRoot) instead.")]
         public static DbContextOptionsBuilder<TContext> UseLiteDB<TContext>(
             [NotNull] this DbContextOptionsBuilder<TContext> optionsBuilder,
             [CanBeNull] Action<LiteDBDbContextOptionsBuilder> inMemoryOptionsAction = null)
@@ -159,7 +162,7 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="optionsBuilder"> The builder being used to configure the context. </param>
         /// <param name="inMemoryOptionsAction">An optional action to allow additional in-memory specific configuration.</param>
         /// <returns> The options builder so that further configuration can be chained. </returns>
-        [Obsolete("Use UseLiteDB(string, InMemoryDatabaseRoot) instead.")]
+        [Obsolete("Use UseLiteDB(string, LiteDBDatabaseRoot) instead.")]
         public static DbContextOptionsBuilder UseLiteDB(
             [NotNull] this DbContextOptionsBuilder optionsBuilder,
             [CanBeNull] Action<LiteDBDbContextOptionsBuilder> inMemoryOptionsAction = null)

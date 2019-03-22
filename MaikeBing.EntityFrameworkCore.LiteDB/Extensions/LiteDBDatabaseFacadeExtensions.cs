@@ -5,10 +5,10 @@ using System;
 using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Infrastructure.Internal;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.EntityFrameworkCore
+namespace MaikeBing.EntityFrameworkCore
 {
     /// <summary>
     ///     In-memory specific extension methods for <see cref="DbContext.Database" />.
@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore
         /// </summary>
         /// <param name="database"> The facade from <see cref="DbContext.Database" />. </param>
         /// <returns> True if the in-memory database is being used; false otherwise. </returns>
-        public static bool IsInMemory([NotNull] this DatabaseFacade database)
+        public static bool IsLiteDB([NotNull] this DatabaseFacade database)
             => database.ProviderName.Equals(
                 typeof(LiteDBOptionsExtension).GetTypeInfo().Assembly.GetName().Name,
                 StringComparison.Ordinal);

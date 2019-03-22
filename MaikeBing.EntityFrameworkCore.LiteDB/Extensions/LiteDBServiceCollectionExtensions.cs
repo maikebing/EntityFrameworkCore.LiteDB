@@ -3,12 +3,12 @@
 
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.Metadata.Conventions.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.Query.ExpressionVisitors.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.Query.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.Storage.Internal;
-using Microsoft.EntityFrameworkCore.InMemory.ValueGeneration.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Infrastructure.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Metadata.Conventions.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Query.ExpressionVisitors.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Query.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Storage.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.ValueGeneration.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors;
@@ -17,9 +17,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
+using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace MaikeBing.Extensions.DependencyInjection
 {
     /// <summary>
     ///     In-memory specific extension methods for <see cref="IServiceCollection" />.
@@ -44,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
         ///         public void ConfigureServices(IServiceCollection services)
         ///         {
         ///             services
-        ///                 .AddEntityFrameworkInMemoryDatabase()
+        ///                 .AddEntityFrameworkLiteDBDatabase()
         ///                 .AddDbContext&lt;MyContext&gt;((serviceProvider, options) =>
         ///                     options.UseLiteDB("MyDatabase")
         ///                            .UseInternalServiceProvider(serviceProvider));
@@ -55,7 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>
         ///     The same service collection so that multiple calls can be chained.
         /// </returns>
-        public static IServiceCollection AddEntityFrameworkInMemoryDatabase([NotNull] this IServiceCollection serviceCollection)
+        public static IServiceCollection AddEntityFrameworkLiteDBDatabase([NotNull] this IServiceCollection serviceCollection)
         {
             Check.NotNull(serviceCollection, nameof(serviceCollection));
 

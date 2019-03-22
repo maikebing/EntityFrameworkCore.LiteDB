@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using JetBrains.Annotations;
+using MaikeBing.EntityFrameworkCore.Storage;
+using MaikeBing.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
+namespace MaikeBing.EntityFrameworkCore.LiteDB.Infrastructure.Internal
 {
     /// <summary>
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -92,7 +94,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         {
             Check.NotNull(services, nameof(services));
 
-            services.AddEntityFrameworkInMemoryDatabase();
+            services.AddEntityFrameworkLiteDBDatabase();
 
             return true;
         }
@@ -109,7 +111,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         /// </summary>
         public virtual void PopulateDebugInfo(IDictionary<string, string> debugInfo)
         {
-            debugInfo["InMemoryDatabase:DatabaseRoot"] = (_databaseRoot?.GetHashCode() ?? 0L).ToString(CultureInfo.InvariantCulture);
+            debugInfo["LiteDBDatabase:DatabaseRoot"] = (_databaseRoot?.GetHashCode() ?? 0L).ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>

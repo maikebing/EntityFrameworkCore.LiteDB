@@ -5,9 +5,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
+using MaikeBing.EntityFrameworkCore.LiteDB.Infrastructure.Internal;
 
-namespace Microsoft.EntityFrameworkCore.InMemory.Storage.Internal
+namespace MaikeBing.EntityFrameworkCore.LiteDB.Storage.Internal
 {
     /// <summary>
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
