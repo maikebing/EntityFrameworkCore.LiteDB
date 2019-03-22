@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDBWebApplication", "LiteDBWebApplication\LiteDBWebApplication.csproj", "{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaikeBing.EntityFrameworkCore.NoSqLiteDB", "MaikeBing.EntityFrameworkCore.NoSqLiteDB\MaikeBing.EntityFrameworkCore.NoSqLiteDB.csproj", "{F7CD214D-97C9-4211-8311-805DD8D58360}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7CD214D-97C9-4211-8311-805DD8D58360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CD214D-97C9-4211-8311-805DD8D58360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CD214D-97C9-4211-8311-805DD8D58360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7CD214D-97C9-4211-8311-805DD8D58360}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0E0EB1D-3B28-474B-B1CF-0CF49301D73C}
+	EndGlobalSection
+EndGlobal
