@@ -20,6 +20,7 @@
     <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.LiteDB</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/maikebing/EntityFrameworkCore.LiteDB/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>Copyright 2019 MaikeBing</Copyright>
+    <Version>0.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
