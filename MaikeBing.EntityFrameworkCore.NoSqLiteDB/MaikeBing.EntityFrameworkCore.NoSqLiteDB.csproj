@@ -7,8 +7,12 @@
     <AssemblyName>MaikeBing.EntityFrameworkCore.NoSqLiteDB</AssemblyName>
     <RootNamespace>MaikeBing.EntityFrameworkCore.NoSqLiteDB</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>$(PackageTags);LiteDB</PackageTags>
+    <PackageTags>Entity Framework Core;LiteDB</PackageTags>
     <LangVersion>latest</LangVersion>
+    <PackageId>MaikeBing.EntityFrameworkCore.LiteDB</PackageId>
+    <Authors>MaikeBing</Authors>
+    <Product>MaikeBing.EntityFrameworkCore.LiteDB</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
