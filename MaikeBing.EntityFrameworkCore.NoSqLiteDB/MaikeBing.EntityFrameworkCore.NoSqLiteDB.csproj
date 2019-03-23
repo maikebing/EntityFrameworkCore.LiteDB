@@ -13,6 +13,13 @@
     <Authors>MaikeBing</Authors>
     <Product>MaikeBing.EntityFrameworkCore.LiteDB</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+    <PackageReleaseNotes>Do not use in a production environment unless you have the ability to modify this project</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.LiteDB</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.LiteDB</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/maikebing/EntityFrameworkCore.LiteDB/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright 2019 MaikeBing</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
