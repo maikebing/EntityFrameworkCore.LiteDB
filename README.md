@@ -1,4 +1,6 @@
-
+![License](![GitHub](https://img.shields.io/github/license/maikebing/EntityFrameworkCore.LiteDB.svg)
+[![Build status](https://ci.appveyor.com/api/projects/status/vwsmrn4rm8os303y?svg=true)](https://ci.appveyor.com/project/MaiKeBing/entityframeworkcore-litedb)
+ 
 [![Nuget Version](https://img.shields.io/nuget/v/NGitLab.Plus.svg)](https://www.nuget.org/packages/MaikeBing.EntityFrameworkCore.LiteDB/)
  
 
@@ -6,8 +8,9 @@
 
 ## What is MaikeBing.EntityFrameworkCore.LiteDB?
 
-*NGitLab* is a LiteDB  provider for Entity Framework Core .
+*MaikeBing.EntityFrameworkCore.LiteDB* is a LiteDB  provider for Entity Framework Core .
 
+* Do not use in a production environment unless you have the ability to modify this project *
  
  
 ## Where can I get it?
