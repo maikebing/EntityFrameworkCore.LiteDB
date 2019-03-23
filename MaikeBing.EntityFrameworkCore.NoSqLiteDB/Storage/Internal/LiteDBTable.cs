@@ -50,18 +50,39 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         }
 
         /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// 从文件中读取读取所有数作为快照供查询使用，，目前是快照全部，这里大量数据时不能这么做
         /// </summary>
+        /// <returns></returns>
         public virtual IReadOnlyList<object[]> SnapshotRows()
         {
             List<object[]> vs = new List<object[]>();
             _docrows.FindAll().ToList().ForEach(doc =>
-                {
-                    var value = BsonMapper.Global.ToObject(_entityType.ClrType, doc);
-                    vs.Add(_entityType.GetProperties().Select(p => p.PropertyInfo.GetValue(value)).ToArray());
-                });
+            {
+                var value = BsonMapper.Global.ToObject(_entityType.ClrType, doc);
+                vs.Add(_entityType.GetProperties().Select(p => ReadFieldValue(p, value)).ToArray());
+            });
             return vs;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object ReadFieldValue(IProperty p, object _value)
+        {
+            object value = null;
+            if (p.IsForeignKey())
+            {
+                var fk = p.AsProperty().ForeignKeys.FirstOrDefault();
+                var entvalue = fk.DependentToPrincipal.PropertyInfo.GetValue(_value);
+                value = fk.PrincipalKey.DeclaringEntityType.GetProperty(p.Name).PropertyInfo.GetValue(entvalue);
+            }
+            else
+            {
+                value= p.PropertyInfo?.GetValue(_value);
+            }
+            return value;
         }
 
         private static List<ValueComparer> GetStructuralComparers(IEnumerable<IProperty> properties)
