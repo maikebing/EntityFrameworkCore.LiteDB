@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
+using LiteDB;
 using MaikeBing.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
@@ -25,8 +26,9 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         private readonly bool _useNameMatching;
         private readonly string _name;
         private readonly object _lock = new object();
+        private LazyRef<Dictionary<object, ILiteDBTable>> _tables;
 
-        private LazyRef<Dictionary<object, ILiteDBTable>> _tables = CreateTables();
+        public LiteDatabase LiteDatabase { get; set; }
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -47,8 +49,10 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             string name)
         {
             _tableFactory = tableFactory;
+            LiteDatabase = new LiteDB.LiteDatabase(name);
+            _tableFactory.LiteDatabase = LiteDatabase;
             _useNameMatching = useNameMatching;
-            _name = name;
+            _tables = CreateTables();
         }
 
         /// <summary>
@@ -105,8 +109,8 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             }
         }
 
-        private static LazyRef<Dictionary<object, ILiteDBTable>> CreateTables()
-            => new LazyRef<Dictionary<object, ILiteDBTable>>(() => new Dictionary<object, ILiteDBTable>());
+        private LazyRef<Dictionary<object, ILiteDBTable>> CreateTables() => new LazyRef<Dictionary<object, ILiteDBTable>>(()=>new Dictionary<object, ILiteDBTable>());
+     
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -117,7 +121,12 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             var data = new List<LiteDBTableSnapshot>();
             lock (_lock)
             {
-                if (_tables.HasValue)
+                var keyt = _useNameMatching ? (object)entityType.Name : entityType;
+                if (!_tables.HasValue || !_tables.Value.ContainsKey(keyt))
+                {
+                    _tables.Value.Add(keyt, _tableFactory.Create(entityType));
+                }
+                else
                 {
                     foreach (var et in entityType.GetConcreteTypesInHierarchy())
                     {
@@ -129,7 +138,6 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                     }
                 }
             }
-
             return data;
         }
 
@@ -185,9 +193,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                     rowsAffected++;
                 }
             }
-
             updateLogger.ChangesSaved(entries, rowsAffected);
-
             return rowsAffected;
         }
     }

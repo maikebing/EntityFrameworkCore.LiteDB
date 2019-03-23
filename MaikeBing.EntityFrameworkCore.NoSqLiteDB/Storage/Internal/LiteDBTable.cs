@@ -16,7 +16,8 @@ using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore;
-using LDB = LiteDB;
+using LiteDB;
+
 namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
 {
     /// <summary>
@@ -28,16 +29,26 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         private readonly IPrincipalKeyValueFactory<TKey> _keyValueFactory;
         private readonly bool _sensitiveLoggingEnabled;
         private readonly Dictionary<TKey, object[]> _rows;
-       
+        private readonly LiteDB.LiteCollection<BsonDocument> _docrows;
+        private readonly IEntityType _entityType;
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public LiteDBTable([NotNull] IPrincipalKeyValueFactory<TKey> keyValueFactory, bool sensitiveLoggingEnabled)
+        public LiteDBTable([NotNull] IPrincipalKeyValueFactory<TKey> keyValueFactory, bool sensitiveLoggingEnabled, LiteDatabase _liteDatabase,IEntityType  entityType)
         {
             _keyValueFactory = keyValueFactory;
             _sensitiveLoggingEnabled = sensitiveLoggingEnabled;
-            _rows = new Dictionary<TKey, object[]>(keyValueFactory.EqualityComparer);
+             _rows =  new Dictionary<TKey, object[]>(keyValueFactory.EqualityComparer);
+            _docrows = _liteDatabase.GetCollection<BsonDocument>(entityType.TableName());
+            entityType.GetKeys()?.ToList().ForEach(key =>
+            {
+                key.Properties.ToList().ForEach(ip =>
+                {
+                    _docrows.EnsureIndex(ip.Name, ip.IsForeignKey());
+                });
+            });
+            _entityType = entityType;
         }
 
         /// <summary>
@@ -45,7 +56,15 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public virtual IReadOnlyList<object[]> SnapshotRows()
-            => _rows.Values.ToList();
+        {
+            List<object[]> vs = new List<object[]>();
+            _docrows.FindAll().ToList().ForEach(doc =>
+                {
+                    var value = BsonMapper.Global.ToObject(_entityType.ClrType, doc);
+                    vs.Add(_entityType.GetProperties().Select(p => p.PropertyInfo.GetValue(value)).ToArray());
+                });
+            return vs;
+        }
 
         private static List<ValueComparer> GetStructuralComparers(IEnumerable<IProperty> properties)
             => properties.Select(GetStructuralComparer).ToList();
@@ -58,9 +77,12 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public virtual void Create(IUpdateEntry entry)
-            => _rows.Add(
-                CreateKey(entry),
-                entry.EntityType.GetProperties().Select(p => SnapshotValue(p, GetStructuralComparer(p), entry)).ToArray());
+        {
+            var key = CreateKey(entry);
+            var value = entry.EntityType.GetProperties().Select(p => SnapshotValue(p, GetStructuralComparer(p), entry)).ToArray();
+            _rows.Add(key, value);
+            _docrows.Insert(BsonMapper.Global.ToDocument(entry.ToEntityEntry().Entity));
+        }
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -69,8 +91,9 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         public virtual void Delete(IUpdateEntry entry)
         {
             var key = CreateKey(entry);
+           var value=  _docrows.FindById(new BsonValue( key));
 
-            if (_rows.ContainsKey(key))
+            if (_rows.ContainsKey(key) && value!=null)
             {
                 var properties = entry.EntityType.GetProperties().ToList();
                 var concurrencyConflicts = new Dictionary<IProperty, object>();
@@ -86,6 +109,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                 }
 
                 _rows.Remove(key);
+                _docrows.Delete(new BsonValue(key));
             }
             else
             {
@@ -119,8 +143,8 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         public virtual void Update(IUpdateEntry entry)
         {
             var key = CreateKey(entry);
-
-            if (_rows.ContainsKey(key))
+            var value = _docrows.FindById(new BsonValue(key));
+            if (_rows.ContainsKey(key) && value!=null)
             {
                 var properties = entry.EntityType.GetProperties().ToList();
                 var comparers = GetStructuralComparers(properties);
@@ -145,6 +169,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                 }
 
                 _rows[key] = valueBuffer;
+                _docrows.Update( new BsonValue(key), BsonMapper.Global.ToDocument(entry.ToEntityEntry().Entity));
             }
             else
             {

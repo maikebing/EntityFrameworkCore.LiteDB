@@ -48,27 +48,29 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.Internal
             Func<IEntityType, MaterializationContext, object> materializer,
             bool queryStateManager)
             where TEntity : class
-            => ((LiteDBQueryContext)queryContext).Store
-                .GetTables(entityType)
-                .SelectMany(
-                    t =>
-                        t.Rows.Select(
-                            vs =>
-                            {
-                                var valueBuffer = new ValueBuffer(vs);
+        {
+            return ((LiteDBQueryContext)queryContext).Store
+                           .GetTables(entityType)
+                           .SelectMany(
+                               t =>
+                                   t.Rows.Select(
+                                       vs =>
+                                       {
+                                           var valueBuffer = new ValueBuffer(vs);
 
-                                return (TEntity)queryContext
-                                    .QueryBuffer
-                                    .GetEntity(
-                                        key,
-                                        new EntityLoadInfo(
-                                            new MaterializationContext(
-                                                valueBuffer,
-                                                queryContext.Context),
-                                            c => materializer(t.EntityType, SnapshotValueBuffer(t.EntityType, c))),
-                                        queryStateManager,
-                                        throwOnNullKey: false);
-                            }));
+                                           return (TEntity)queryContext
+                                               .QueryBuffer
+                                               .GetEntity(
+                                                   key,
+                                                   new EntityLoadInfo(
+                                                       new MaterializationContext(
+                                                           valueBuffer,
+                                                           queryContext.Context),
+                                                       c => materializer(t.EntityType, SnapshotValueBuffer(t.EntityType, c))),
+                                                   queryStateManager,
+                                                   throwOnNullKey: false);
+                                       }));
+        }
 
         private static MaterializationContext SnapshotValueBuffer(
             IEntityType entityType,

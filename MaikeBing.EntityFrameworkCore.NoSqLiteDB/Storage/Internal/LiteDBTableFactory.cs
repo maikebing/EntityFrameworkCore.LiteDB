@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using JetBrains.Annotations;
+using LiteDB;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -24,6 +25,8 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         private readonly ConcurrentDictionary<IKey, Func<ILiteDBTable>> _factories
             = new ConcurrentDictionary<IKey, Func<ILiteDBTable>>();
 
+        public LiteDatabase LiteDatabase { get; set; }
+
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -40,16 +43,18 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public virtual ILiteDBTable Create(IEntityType entityType)
-            => _factories.GetOrAdd(entityType.FindPrimaryKey(), Create)();
+        {
+            return _factories.GetOrAdd(entityType.FindPrimaryKey(),  Create(entityType.FindPrimaryKey(), entityType))();
+        }
 
-        private Func<ILiteDBTable> Create([NotNull] IKey key)
+        private Func<ILiteDBTable> Create([NotNull] IKey key, IEntityType entityType)
             => (Func<ILiteDBTable>)typeof(LiteDBTableFactory).GetTypeInfo()
                 .GetDeclaredMethod(nameof(CreateFactory))
                 .MakeGenericMethod(GetKeyType(key))
-                .Invoke(null, new object[] { key, _sensitiveLoggingEnabled });
+                .Invoke(null, new object[] { key, _sensitiveLoggingEnabled  ,LiteDatabase, entityType });
 
         [UsedImplicitly]
-        private static Func<ILiteDBTable> CreateFactory<TKey>(IKey key, bool sensitiveLoggingEnabled)
-            => () => new LiteDBTable<TKey>(key.GetPrincipalKeyValueFactory<TKey>(), sensitiveLoggingEnabled);
+        private static Func<ILiteDBTable> CreateFactory<TKey>(IKey key, bool sensitiveLoggingEnabled,LiteDB.LiteDatabase _liteDatabase,IEntityType _entityType)
+            => () => new LiteDBTable<TKey>(key.GetPrincipalKeyValueFactory<TKey>(), sensitiveLoggingEnabled, _liteDatabase, _entityType);
     }
 }
