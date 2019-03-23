@@ -126,15 +126,12 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                 {
                     _tables.Value.Add(keyt, _tableFactory.Create(entityType));
                 }
-                else
+                foreach (var et in entityType.GetConcreteTypesInHierarchy())
                 {
-                    foreach (var et in entityType.GetConcreteTypesInHierarchy())
+                    var key = _useNameMatching ? (object)et.Name : et;
+                    if (_tables.Value.TryGetValue(key, out var table))
                     {
-                        var key = _useNameMatching ? (object)et.Name : et;
-                        if (_tables.Value.TryGetValue(key, out var table))
-                        {
-                            data.Add(new LiteDBTableSnapshot(et, table.SnapshotRows()));
-                        }
+                        data.Add(new LiteDBTableSnapshot(et, table.SnapshotRows()));
                     }
                 }
             }
