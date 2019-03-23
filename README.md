@@ -1,6 +1,5 @@
 [![License](https://img.shields.io/github/license/maikebing/EntityFrameworkCore.LiteDB.svg)](https://github.com/maikebing/EntityFrameworkCore.LiteDB/blob/master/LICENSE)
 [![Build status](https://ci.appveyor.com/api/projects/status/vwsmrn4rm8os303y?svg=true)](https://ci.appveyor.com/project/MaiKeBing/entityframeworkcore-litedb)
- 
 [![Nuget Version](https://img.shields.io/nuget/v/MaikeBing.EntityFrameworkCore.LiteDB.svg)](https://www.nuget.org/packages/MaikeBing.EntityFrameworkCore.LiteDB/)
  
 
