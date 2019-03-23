@@ -28,7 +28,6 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
     {
         private readonly IPrincipalKeyValueFactory<TKey> _keyValueFactory;
         private readonly bool _sensitiveLoggingEnabled;
-        private readonly Dictionary<TKey, object[]> _rows;
         private readonly LiteDB.LiteCollection<BsonDocument> _docrows;
         private readonly IEntityType _entityType;
         /// <summary>
@@ -39,7 +38,6 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         {
             _keyValueFactory = keyValueFactory;
             _sensitiveLoggingEnabled = sensitiveLoggingEnabled;
-             _rows =  new Dictionary<TKey, object[]>(keyValueFactory.EqualityComparer);
             _docrows = _liteDatabase.GetCollection<BsonDocument>(entityType.TableName());
             entityType.GetKeys()?.ToList().ForEach(key =>
             {
@@ -79,8 +77,6 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         public virtual void Create(IUpdateEntry entry)
         {
             var key = CreateKey(entry);
-            var value = entry.EntityType.GetProperties().Select(p => SnapshotValue(p, GetStructuralComparer(p), entry)).ToArray();
-            _rows.Add(key, value);
             _docrows.Insert(BsonMapper.Global.ToDocument(entry.ToEntityEntry().Entity));
         }
 
@@ -92,23 +88,8 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         {
             var key = CreateKey(entry);
            var value=  _docrows.FindById(new BsonValue( key));
-
-            if (_rows.ContainsKey(key) && value!=null)
+            if ( value!=null)
             {
-                var properties = entry.EntityType.GetProperties().ToList();
-                var concurrencyConflicts = new Dictionary<IProperty, object>();
-
-                for (var index = 0; index < properties.Count; index++)
-                {
-                    IsConcurrencyConflict(entry, properties[index], _rows[key][index], concurrencyConflicts);
-                }
-
-                if (concurrencyConflicts.Count > 0)
-                {
-                    ThrowUpdateConcurrencyException(entry, concurrencyConflicts);
-                }
-
-                _rows.Remove(key);
                 _docrows.Delete(new BsonValue(key));
             }
             else
@@ -144,32 +125,20 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         {
             var key = CreateKey(entry);
             var value = _docrows.FindById(new BsonValue(key));
-            if (_rows.ContainsKey(key) && value!=null)
+            if (value!=null)
             {
                 var properties = entry.EntityType.GetProperties().ToList();
                 var comparers = GetStructuralComparers(properties);
                 var valueBuffer = new object[properties.Count];
                 var concurrencyConflicts = new Dictionary<IProperty, object>();
-
-                for (var index = 0; index < valueBuffer.Length; index++)
+                for (int i = 0; i < properties.Count; i++)
                 {
-                    if (IsConcurrencyConflict(entry, properties[index], _rows[key][index], concurrencyConflicts))
+                    if (entry.IsModified(properties[i]))
                     {
-                        continue;
+                        value.Set(properties[i].Name, new BsonValue(SnapshotValue(properties[i], comparers[i], entry)));
                     }
-
-                    valueBuffer[index] = entry.IsModified(properties[index])
-                        ? SnapshotValue(properties[index], comparers[index], entry)
-                        : _rows[key][index];
                 }
-
-                if (concurrencyConflicts.Count > 0)
-                {
-                    ThrowUpdateConcurrencyException(entry, concurrencyConflicts);
-                }
-
-                _rows[key] = valueBuffer;
-                _docrows.Update( new BsonValue(key), BsonMapper.Global.ToDocument(entry.ToEntityEntry().Entity));
+                _docrows.Update( new BsonValue(key), BsonMapper.Global.ToDocument(value));
             }
             else
             {
