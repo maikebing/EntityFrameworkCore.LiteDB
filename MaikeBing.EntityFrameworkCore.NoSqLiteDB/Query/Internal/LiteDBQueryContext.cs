@@ -15,16 +15,15 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.Internal
     /// </summary>
     public class LiteDBQueryContext : QueryContext
     {
+        public LiteDBQueryContext(QueryContextDependencies dependencies) : base(dependencies)
+        {
+        }
+
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public LiteDBQueryContext(
-            [NotNull] QueryContextDependencies dependencies,
-            [NotNull] Func<IQueryBuffer> queryBufferFactory,
-            [NotNull] ILiteDBStore store)
-            : base(dependencies, queryBufferFactory)
-            => Store = store;
+
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used

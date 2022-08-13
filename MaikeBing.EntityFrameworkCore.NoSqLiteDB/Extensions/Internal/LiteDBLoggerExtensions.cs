@@ -4,10 +4,8 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Internal;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 // ReSharper disable once CheckNamespace
 namespace MaikeBing.EntityFrameworkCore.Internal
@@ -25,22 +23,16 @@ namespace MaikeBing.EntityFrameworkCore.Internal
         public static void TransactionIgnoredWarning(
             [NotNull] this IDiagnosticsLogger<DbLoggerCategory.Database.Transaction> diagnostics)
         {
-            var definition = LiteDBStrings.LogTransactionsNotSupported;
+          
 
-            var warningBehavior = definition.GetLogBehavior(diagnostics);
-            if (warningBehavior != WarningBehavior.Ignore)
-            {
-                definition.Log(diagnostics, warningBehavior);
-            }
-
-            if (diagnostics.DiagnosticSource.IsEnabled(definition.EventId.Name))
-            {
-                diagnostics.DiagnosticSource.Write(
-                    definition.EventId.Name,
-                    new EventData(
-                        definition,
-                        (d, _) => ((EventDefinition)d).GenerateMessage()));
-            }
+            //if (diagnostics.DiagnosticSource.IsEnabled(definition.EventId.Name))
+            //{
+            //    diagnostics.DiagnosticSource.Write(
+            //        definition.EventId.Name,
+            //        new EventData(
+            //            definition,
+            //            (d, _) => ((EventDefinition)d).GenerateMessage()));
+            //}
         }
 
         /// <summary>
@@ -52,27 +44,23 @@ namespace MaikeBing.EntityFrameworkCore.Internal
             [NotNull] IEnumerable<IUpdateEntry> entries,
             int rowsAffected)
         {
-            var definition = LiteDBStrings.LogSavedChanges;
 
-            var warningBehavior = definition.GetLogBehavior(diagnostics);
-            if (warningBehavior != WarningBehavior.Ignore)
-            {
-                definition.Log(
-                    diagnostics,
-                    warningBehavior,
-                    rowsAffected);
-            }
+            //var warningBehavior = definition.WarningBehavior;
+            //if (warningBehavior != WarningBehavior.Ignore)
+            //{
+            //    definition.Log(diagnostics, rowsAffected);
+            //}
 
-            if (diagnostics.DiagnosticSource.IsEnabled(definition.EventId.Name))
-            {
-                diagnostics.DiagnosticSource.Write(
-                    definition.EventId.Name,
-                    new SaveChangesEventData(
-                        definition,
-                        ChangesSaved,
-                        entries,
-                        rowsAffected));
-            }
+            //if (diagnostics.DiagnosticSource.IsEnabled(definition.EventId.Name))
+            //{
+            //    diagnostics.DiagnosticSource.Write(
+            //        definition.EventId.Name,
+            //        new SaveChangesEventData(
+            //            definition,
+            //            ChangesSaved,
+            //            entries,
+            //            rowsAffected));
+            //}
         }
 
         private static string ChangesSaved(EventDefinitionBase definition, EventData payload)

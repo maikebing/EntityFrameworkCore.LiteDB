@@ -69,7 +69,7 @@ namespace System.Reflection
             }
 
             var map = targetMethod.DeclaringType.GetInterfaceMap(interfaceType);
-            var index = map.TargetMethods.IndexOf(targetMethod, MemberInfoComparer.Instance);
+            var index = Array.IndexOf( map.TargetMethods,targetMethod);
 
             return index != -1
                 ? map.InterfaceMethods[index]

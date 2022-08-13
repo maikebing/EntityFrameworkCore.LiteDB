@@ -43,6 +43,6 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         int ExecuteTransaction(
-            [NotNull] IReadOnlyList<IUpdateEntry> entries, [NotNull] IDiagnosticsLogger<DbLoggerCategory.Update> updateLogger);
+            [NotNull] IList<IUpdateEntry> entries, [NotNull] IDiagnosticsLogger<DbLoggerCategory.Update> updateLogger);
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -15,7 +16,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.Utilities;
-using Remotion.Linq;
 
 namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
 {
@@ -58,7 +58,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public override int SaveChanges(IReadOnlyList<IUpdateEntry> entries)
+        public override int SaveChanges(IList<IUpdateEntry> entries)
             => _store.ExecuteTransaction(Check.NotNull(entries, nameof(entries)), _updateLogger);
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public override Task<int> SaveChangesAsync(
-            IReadOnlyList<IUpdateEntry> entries,
+            IList<IUpdateEntry> entries,
             CancellationToken cancellationToken = default)
             => Task.FromResult(_store.ExecuteTransaction(Check.NotNull(entries, nameof(entries)), _updateLogger));
 
@@ -77,17 +77,11 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         public virtual bool EnsureDatabaseCreated(StateManagerDependencies stateManagerDependencies)
             => _store.EnsureCreated(Check.NotNull(stateManagerDependencies, nameof(stateManagerDependencies)), _updateLogger);
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public override Func<QueryContext, IAsyncEnumerable<TResult>> CompileAsyncQuery<TResult>(QueryModel queryModel)
-        {
-            Check.NotNull(queryModel, nameof(queryModel));
+     
+    
 
-            var syncQueryExecutor = CompileQuery<TResult>(queryModel);
+ 
 
-            return qc => syncQueryExecutor(qc).ToAsyncEnumerable();
-        }
+      
     }
 }

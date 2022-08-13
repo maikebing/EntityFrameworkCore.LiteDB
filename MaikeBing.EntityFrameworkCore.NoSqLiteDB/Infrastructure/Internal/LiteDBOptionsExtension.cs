@@ -18,35 +18,27 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Infrastructure.Internal
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public class LiteDBOptionsExtension : IDbContextOptionsExtensionWithDebugInfo
+    public class LiteDBOptionsExtension : DbContextOptionsExtensionInfo, IDbContextOptionsExtension
     {
         private string _storeName;
         private LiteDBDatabaseRoot _databaseRoot;
         private string _logFragment;
+        private IDbContextOptionsExtension _extension;
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public LiteDBOptionsExtension()
+        public LiteDBOptionsExtension(IDbContextOptionsExtension extension) : base(extension)
         {
+            _extension = extension;
         }
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        protected LiteDBOptionsExtension([NotNull] LiteDBOptionsExtension copyFrom)
-        {
-            _storeName = copyFrom._storeName;
-            _databaseRoot = copyFrom._databaseRoot;
-        }
+     
+
+
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        protected virtual LiteDBOptionsExtension Clone() => new LiteDBOptionsExtension(this);
+        protected virtual LiteDBOptionsExtension Clone() => new LiteDBOptionsExtension(_extension);
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -90,43 +82,54 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Infrastructure.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual bool ApplyServices(IServiceCollection services)
+        public   void ApplyServices(IServiceCollection services)
         {
             Check.NotNull(services, nameof(services));
 
             services.AddEntityFrameworkLiteDBDatabase();
 
-            return true;
         }
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual long GetServiceProviderHashCode() => _databaseRoot?.GetHashCode() ?? 0L;
+        public override int  GetServiceProviderHashCode() => _databaseRoot?.GetHashCode() ?? 0;
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual void PopulateDebugInfo(IDictionary<string, string> debugInfo)
+        public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
         {
             debugInfo["LiteDBDatabase:DatabaseRoot"] = (_databaseRoot?.GetHashCode() ?? 0L).ToString(CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public virtual void Validate(IDbContextOptions options)
+  
+        public override bool ShouldUseSameServiceProvider(DbContextOptionsExtensionInfo other)
         {
+            return false;
         }
+
+     
+
+        public void Validate(IDbContextOptions options)
+        {
+            
+        }
+
+     
+
+
+
+
+
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual string LogFragment
+        public override string LogFragment
         {
             get
             {
@@ -142,5 +145,9 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Infrastructure.Internal
                 return _logFragment;
             }
         }
+
+        public override bool IsDatabaseProvider => true;
+
+        public DbContextOptionsExtensionInfo Info => _extension.Info;
     }
 }

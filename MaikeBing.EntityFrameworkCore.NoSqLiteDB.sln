@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDBWebApplication", "LiteDBWebApplication\LiteDBWebApplication.csproj", "{CEEF722B-AA2F-441F-B3CA-ECC23B33C982}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaikeBing.EntityFrameworkCore.NoSqLiteDB", "MaikeBing.EntityFrameworkCore.NoSqLiteDB\MaikeBing.EntityFrameworkCore.NoSqLiteDB.csproj", "{F7CD214D-97C9-4211-8311-805DD8D58360}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteDBConsoleApp", "LiteDBConsoleApp\LiteDBConsoleApp.csproj", "{1BDC2837-2986-4966-8A5C-9DD12C4A2086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDBConsoleApp", "LiteDBConsoleApp\LiteDBConsoleApp.csproj", "{1BDC2837-2986-4966-8A5C-9DD12C4A2086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationLiteDB", "WebApplicationLiteDB\WebApplicationLiteDB.csproj", "{EAB56B1A-568E-448F-98EE-E88908CC7783}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1BDC2837-2986-4966-8A5C-9DD12C4A2086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BDC2837-2986-4966-8A5C-9DD12C4A2086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BDC2837-2986-4966-8A5C-9DD12C4A2086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB56B1A-568E-448F-98EE-E88908CC7783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB56B1A-568E-448F-98EE-E88908CC7783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB56B1A-568E-448F-98EE-E88908CC7783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB56B1A-568E-448F-98EE-E88908CC7783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>LiteDB  provider for Entity Framework Core .</Description>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <MinClientVersion>3.6</MinClientVersion>
     <AssemblyName>MaikeBing.EntityFrameworkCore.NoSqLiteDB</AssemblyName>
     <RootNamespace>MaikeBing.EntityFrameworkCore.NoSqLiteDB</RootNamespace>
@@ -28,45 +28,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\LiteDBStrings.Designer.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LiteDBStrings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="Properties\LiteDBStrings.Designer.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LiteDBStrings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="Properties\Resources.tt">
-      <Generator></Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\LiteDBStrings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LiteDBStrings.Designer.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\LiteDBStrings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LiteDBStrings.Designer.tt</DependentUpon>
-    </Compile>
+    <PackageReference Include="LiteDB" Version="5.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\LiteDBStrings.resx">
-      <CustomToolNamespace>MaikeBing.EntityFrameworkCore.LiteDB.Internal</CustomToolNamespace>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="LiteDB" Version="4.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

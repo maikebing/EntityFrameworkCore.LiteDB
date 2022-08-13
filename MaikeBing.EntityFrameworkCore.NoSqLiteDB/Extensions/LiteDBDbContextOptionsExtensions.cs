@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using MaikeBing.EntityFrameworkCore.Infrastructure;
 using MaikeBing.EntityFrameworkCore.Storage;
+using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Extensions.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace MaikeBing.EntityFrameworkCore
@@ -118,11 +119,10 @@ namespace MaikeBing.EntityFrameworkCore
         {
             Check.NotNull(optionsBuilder, nameof(optionsBuilder));
             Check.NotEmpty(databaseName, nameof(databaseName));
+           
+            var extension = optionsBuilder.Options.FindExtension<LiteDBOptionsExtension>()??new LiteDBOptionsExtension(new LiteDBDbContextOptionsExtension());
 
-            var extension = optionsBuilder.Options.FindExtension<LiteDBOptionsExtension>()
-                            ?? new LiteDBOptionsExtension();
-
-            extension = extension.WithStoreName(databaseName);
+  extension = extension.WithStoreName(databaseName);
 
             if (databaseRoot != null)
             {

@@ -5,6 +5,7 @@ using System;
 using MaikeBing.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -40,6 +41,12 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Metadata.Conventions.Internal
                     return ConventionSet.CreateConventionSet(context);
                 }
             }
+        }
+/// <inheritdoc/>
+
+        public ConventionSet CreateConventionSet()
+        {
+            return Build();
         }
     }
 }

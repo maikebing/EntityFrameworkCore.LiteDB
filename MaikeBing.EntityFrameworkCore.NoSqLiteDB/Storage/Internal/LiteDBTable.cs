@@ -9,7 +9,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Update;
@@ -28,7 +27,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
     {
         private readonly IPrincipalKeyValueFactory<TKey> _keyValueFactory;
         private readonly bool _sensitiveLoggingEnabled;
-        private readonly LiteDB.LiteCollection<BsonDocument> _docrows;
+        private readonly ILiteCollection<BsonDocument> _docrows;
         private readonly IEntityType _entityType;
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -74,7 +73,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             object value = null;
             if (p.IsForeignKey())
             {
-                var fk = p.AsProperty().ForeignKeys.FirstOrDefault();
+                var fk = p.GetContainingForeignKeys().FirstOrDefault();
                 var entvalue = fk.DependentToPrincipal.PropertyInfo.GetValue(_value);
                 value = fk.PrincipalKey.DeclaringEntityType.GetProperty(p.Name).PropertyInfo.GetValue(entvalue);
             }
@@ -89,7 +88,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             => properties.Select(GetStructuralComparer).ToList();
 
         private static ValueComparer GetStructuralComparer(IProperty p)
-            => p.GetStructuralValueComparer() ?? p.FindMapping()?.StructuralComparer;
+            => p.GetStructuralValueComparer() ?? p.FindTypeMapping()?.KeyComparer ;
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -115,7 +114,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             }
             else
             {
-                throw new DbUpdateConcurrencyException(LiteDBStrings.UpdateConcurrencyException, new[] { entry });
+                throw new DbUpdateConcurrencyException();
             }
         }
 
@@ -156,14 +155,14 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                 {
                     if (entry.IsModified(properties[i]))
                     {
-                        value.Set(properties[i].Name, new BsonValue(SnapshotValue(properties[i], comparers[i], entry)));
+                        value[properties[i].Name]= new BsonValue(SnapshotValue(properties[i], comparers[i], entry));
                     }
                 }
                 _docrows.Update( new BsonValue(key), BsonMapper.Global.ToDocument(value));
             }
             else
             {
-                throw new DbUpdateConcurrencyException(LiteDBStrings.UpdateConcurrencyException, new[] { entry });
+                throw new DbUpdateConcurrencyException();
             }
         }
 
@@ -189,19 +188,10 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             if (_sensitiveLoggingEnabled)
             {
                 throw new DbUpdateConcurrencyException(
-                    LiteDBStrings.UpdateConcurrencyTokenExceptionSensitive(
-                        entry.EntityType.DisplayName(),
-                        entry.BuildCurrentValuesString(entry.EntityType.FindPrimaryKey().Properties),
-                        entry.BuildOriginalValuesString(concurrencyConflicts.Keys),
-                        "{" + string.Join(", ", concurrencyConflicts.Select(c => c.Key.Name + ": " + Convert.ToString(c.Value, CultureInfo.InvariantCulture))) + "}"),
-                    new[] { entry });
+                    );
             }
 
-            throw new DbUpdateConcurrencyException(
-                LiteDBStrings.UpdateConcurrencyTokenException(
-                    entry.EntityType.DisplayName(),
-                    Property.Format(concurrencyConflicts.Keys)),
-                new[] { entry });
+            throw new DbUpdateConcurrencyException();
         }
     }
 }

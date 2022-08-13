@@ -18,7 +18,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public class LiteDBTableFactory : IdentityMapFactoryFactoryBase, ILiteDBTableFactory
+    public class LiteDBTableFactory : IdentityMapFactoryFactory  , ILiteDBTableFactory
     {
         private readonly bool _sensitiveLoggingEnabled;
 
@@ -50,7 +50,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         private Func<ILiteDBTable> Create([NotNull] IKey key, IEntityType entityType)
             => (Func<ILiteDBTable>)typeof(LiteDBTableFactory).GetTypeInfo()
                 .GetDeclaredMethod(nameof(CreateFactory))
-                .MakeGenericMethod(GetKeyType(key))
+                .MakeGenericMethod(key.GetKeyType())
                 .Invoke(null, new object[] { key, _sensitiveLoggingEnabled  ,LiteDatabase, entityType });
 
         [UsedImplicitly]

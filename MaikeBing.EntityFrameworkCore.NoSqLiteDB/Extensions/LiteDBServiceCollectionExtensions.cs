@@ -5,19 +5,20 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Infrastructure.Internal;
 using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Metadata.Conventions.Internal;
-using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.ExpressionVisitors.Internal;
 using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.Internal;
 using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal;
 using MaikeBing.EntityFrameworkCore.NoSqLiteDB.ValueGeneration.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Remotion.Linq.Parsing.ExpressionVisitors.TreeEvaluation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Diagnostics;
+using MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.ExpressionVisitors.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
 // ReSharper disable once CheckNamespace
 namespace MaikeBing.Extensions.DependencyInjection
@@ -61,25 +62,27 @@ namespace MaikeBing.Extensions.DependencyInjection
             Check.NotNull(serviceCollection, nameof(serviceCollection));
 
             var builder = new EntityFrameworkServicesBuilder(serviceCollection)
-                .TryAdd<IDatabaseProvider, DatabaseProvider<LiteDBOptionsExtension>>()
+                    .TryAdd<LoggingDefinitions, LiteDBLoggingDefinitions>()
+               .TryAdd<IDatabaseProvider, DatabaseProvider<LiteDBOptionsExtension>>()
                 .TryAdd<IValueGeneratorSelector, LiteDBValueGeneratorSelector>()
                 .TryAdd<IDatabase>(p => p.GetService<ILiteDBDatabase>())
                 .TryAdd<IDbContextTransactionManager, LiteDBTransactionManager>()
                 .TryAdd<IDatabaseCreator, LiteDBDatabaseCreator>()
                 .TryAdd<IQueryContextFactory, LiteDBQueryContextFactory>()
-                .TryAdd<IEntityQueryModelVisitorFactory, LiteDBQueryModelVisitorFactory>()
-                .TryAdd<IEntityQueryableExpressionVisitorFactory, LiteDBEntityQueryableExpressionVisitorFactory>()
+                .TryAdd<IQueryableMethodTranslatingExpressionVisitorFactory, LiteDBQueryableMethodTranslatingExpressionVisitorFactory>()
                 .TryAdd<IEvaluatableExpressionFilter, EvaluatableExpressionFilter>()
-                .TryAdd<IConventionSetBuilder, LiteDBConventionSetBuilder>()
+                 .TryAdd<IConventionSetBuilder, LiteDBConventionSetBuilder>()
                 .TryAdd<ISingletonOptions, ILiteDBSingletonOptions>(p => p.GetService<ILiteDBSingletonOptions>())
                 .TryAdd<ITypeMappingSource, LiteDBTypeMappingSource>()
+
                 .TryAddProviderSpecificServices(
                     b => b
                         .TryAddSingleton<ILiteDBSingletonOptions, LiteDBSingletonOptions>()
                         .TryAddSingleton<ILiteDBStoreCache, LiteDBStoreCache>()
                         .TryAddSingleton<ILiteDBTableFactory, LiteDBTableFactory>()
-                        .TryAddScoped<ILiteDBDatabase, LiteDBDatabase>()
-                        .TryAddScoped<ILiteDBMaterializerFactory, LiteDBMaterializerFactory>());
+                        .TryAddSingleton<IRelationalSqlTranslatingExpressionVisitorFactory, LiteDBSqlTranslatingExpressionVisitorFactory>()
+                        .TryAddScoped<ILiteDBDatabase, LiteDBDatabase>());
+               // .TryAddScoped<ILiteDBMaterializerFactory, LiteDBMaterializerFactory>());
 
             builder.TryAddCoreServices();
 

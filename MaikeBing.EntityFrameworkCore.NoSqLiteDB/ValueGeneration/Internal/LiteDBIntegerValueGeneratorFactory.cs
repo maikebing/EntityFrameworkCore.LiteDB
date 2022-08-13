@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -20,11 +21,13 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.ValueGeneration.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public override ValueGenerator Create(IProperty property)
+      
+
+        public override ValueGenerator Create(IProperty property, IEntityType entityType)
         {
             Check.NotNull(property, nameof(property));
 
-            var type = property.ClrType.UnwrapNullableType().UnwrapEnumType();
+            var type = entityType.ClrType;
 
             if (type == typeof(long))
             {

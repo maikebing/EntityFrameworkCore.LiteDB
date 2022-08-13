@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
@@ -26,7 +27,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         private readonly bool _useNameMatching;
         private readonly string _name;
         private readonly object _lock = new object();
-        private LazyRef<Dictionary<object, ILiteDBTable>> _tables;
+        private Lazy<Dictionary<object, ILiteDBTable>> _tables;
 
         public LiteDatabase LiteDatabase { get; set; }
 
@@ -65,7 +66,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         {
             lock (_lock)
             {
-                var valuesSeeded = !_tables.HasValue;
+                var valuesSeeded = !_tables.IsValueCreated;
                 if (valuesSeeded)
                 {
                     // ReSharper disable once AssignmentIsFullyDiscarded
@@ -75,7 +76,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
                     var entries = new List<IUpdateEntry>();
                     foreach (var entityType in stateManagerDependencies.Model.GetEntityTypes())
                     {
-                        foreach (var targetSeed in entityType.GetData())
+                        foreach (var targetSeed in entityType.GetSeedData())
                         {
                             var entry = stateManager.CreateEntry(targetSeed, entityType);
                             entry.SetEntityState(EntityState.Added);
@@ -98,7 +99,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         {
             lock (_lock)
             {
-                if (!_tables.HasValue)
+                if (!_tables.IsValueCreated)
                 {
                     return false;
                 }
@@ -109,24 +110,24 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             }
         }
 
-        private LazyRef<Dictionary<object, ILiteDBTable>> CreateTables() => new LazyRef<Dictionary<object, ILiteDBTable>>(()=>new Dictionary<object, ILiteDBTable>());
+        private Lazy<Dictionary<object, ILiteDBTable>> CreateTables() => new Lazy<Dictionary<object, ILiteDBTable>>(()=>new Dictionary<object, ILiteDBTable>());
      
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual IReadOnlyList<LiteDBTableSnapshot> GetTables(IEntityType entityType)
+        public virtual IList<LiteDBTableSnapshot> GetTables(IEntityType entityType)
         {
             var data = new List<LiteDBTableSnapshot>();
             lock (_lock)
             {
                 var keyt = _useNameMatching ? (object)entityType.Name : entityType;
-                if (!_tables.HasValue || !_tables.Value.ContainsKey(keyt))
+                if (!_tables.IsValueCreated || !_tables.Value.ContainsKey(keyt))
                 {
                     _tables.Value.Add(keyt, _tableFactory.Create(entityType));
                 }
-                foreach (var et in entityType.GetConcreteTypesInHierarchy())
+                foreach (var et in entityType.GetConcreteDerivedTypesInclusive ())
                 {
                     var key = _useNameMatching ? (object)et.Name : et;
                     if (_tables.Value.TryGetValue(key, out var table))
@@ -143,7 +144,7 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public virtual int ExecuteTransaction(
-            IReadOnlyList<IUpdateEntry> entries,
+            IList<IUpdateEntry> entries,
             IDiagnosticsLogger<DbLoggerCategory.Update> updateLogger)
         {
             var rowsAffected = 0;
@@ -193,5 +194,12 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
             updateLogger.ChangesSaved(entries, rowsAffected);
             return rowsAffected;
         }
+
+        IReadOnlyList<LiteDBTableSnapshot> ILiteDBStore.GetTables(IEntityType entityType)
+        {
+            throw new NotImplementedException();
+        }
+
+    
     }
 }

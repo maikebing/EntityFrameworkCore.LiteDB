@@ -99,5 +99,23 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Storage.Internal
         public virtual void ResetState()
         {
         }
+
+        public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            _logger.TransactionIgnoredWarning();
+            return Task.CompletedTask;
+        }
+
+        public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            _logger.TransactionIgnoredWarning();
+            return Task.CompletedTask;
+        }
+
+        public Task ResetStateAsync(CancellationToken cancellationToken = default)
+        {
+            _logger.TransactionIgnoredWarning();
+            return Task.CompletedTask;
+        }
     }
 }

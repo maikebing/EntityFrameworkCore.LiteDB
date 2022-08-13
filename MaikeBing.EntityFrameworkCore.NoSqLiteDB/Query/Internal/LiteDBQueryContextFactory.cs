@@ -12,9 +12,10 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.Internal
     ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public class LiteDBQueryContextFactory : QueryContextFactory
+    public class LiteDBQueryContextFactory : IQueryContextFactory 
     {
         private readonly ILiteDBStore _store;
+        private readonly QueryContextDependencies _dependencies;
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
@@ -24,16 +25,16 @@ namespace MaikeBing.EntityFrameworkCore.NoSqLiteDB.Query.Internal
             [NotNull] QueryContextDependencies dependencies,
             [NotNull] ILiteDBStoreCache storeCache,
             [NotNull] IDbContextOptions contextOptions)
-            : base(dependencies)
         {
             _store = storeCache.GetStore(contextOptions);
+            _dependencies = dependencies;
         }
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public override QueryContext Create()
-            => new LiteDBQueryContext(Dependencies, CreateQueryBuffer, _store);
+        public   QueryContext Create()
+            => new LiteDBQueryContext(_dependencies);
     }
 }
